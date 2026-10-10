@@ -22,6 +22,7 @@ const Meeting = () => {
     const [activePanel, setActivePanel] = useState(null);
     const [participantChecked, setParticipantChecked] = useState(false);
     const [remoteStreams, setRemoteStreams] = useState([]);
+    const [liveParticipants, setLiveParticipants] = useState([]);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [localStream, setLocalStream] = useState(null);
     const localVideoRef = useRef(null);
@@ -99,6 +100,16 @@ const Meeting = () => {
     const meeting = meetingDetails;
 
     const isHost = meeting?.host?._id?.toString() === user?.id?.toString() || meeting?.hostId?.toString() === user?.id?.toString();
+
+    console.log("HOST DEBUG", {
+        userId: user?.id,
+        userObject: user,
+        meetingHost: meeting?.host,
+        meetingHostId: meeting?.host?._id,
+        meetingHostIdDirect: meeting?.hostId,
+        isHost,
+    });
+
     console.log("👑 HOST CHECK", {
         userId: user?.id,
         meetingHost: meeting?.host?._id,
@@ -615,6 +626,16 @@ const Meeting = () => {
             async (data) => {
                 const { socketId, userId, fullName, cameraOn, } = data;
 
+                setLiveParticipants((prev) => {
+                    if (prev.some((person) => person.socketId === socketId)) {
+                        return prev;
+                    }
+
+                    return [
+                        ...prev,
+                        {socketId,userId,fullName: fullName || "Participant",cameraOn: cameraOn ?? true,},
+                    ];
+                });
                 remoteNamesRef.current[socketId] = fullName || "Participant";
                 setRemoteCameraStates(
                     (prev) => ({
@@ -824,6 +845,24 @@ const Meeting = () => {
         setMessageText("");
     };
 
+    useEffect(() => {
+        const handleParticipantsUpdated = (participants) => {
+            setLiveParticipants(Array.isArray(participants) ? participants : []);
+        };
+
+        socket.on(
+            "meeting_participants_updated",
+            handleParticipantsUpdated
+        );
+
+        return () => {
+            socket.off(
+                "meeting_participants_updated",
+                handleParticipantsUpdated
+            );
+        };
+    }, []);
+
     const handleChatKeyDown = (e) => {
         if (
             e.key === "Enter" &&
@@ -833,6 +872,7 @@ const Meeting = () => {
             handleSendMessage();
         }
     };
+
 
     useEffect(() => {
         if (
@@ -1413,7 +1453,9 @@ const Meeting = () => {
 
                                         <div className="contributors-right">
                                             <span>
-                                                {participants.length + 1 - waitingUsers.length}
+                                                {new Set(
+                                                    liveParticipants.map((person) => person.userId?.toString())
+                                                ).size}
                                             </span>
 
                                             <span
@@ -1426,122 +1468,45 @@ const Meeting = () => {
                                         </div>
                                     </button>
 
+
                                     {showParticipants && (
-
                                         <div className="participants-list">
-                                            <div className="participant-item">
+                                            {liveParticipants.map((person) => {
+                                                const isMe =
+                                                    person.userId?.toString() === user?.id?.toString();
 
-                                                <div className="participant-avatar">
-                                                    {user.fullName
-                                                        ?.charAt(0)
-                                                        ?.toUpperCase() || "U"}
-                                                </div>
-
-                                                <div className="participant-info">
-
-                                                    <h4>
-                                                        {user.fullName || "You"}
-
-                                                        <span className="you-label">
-                                                            {" "} (You)
-                                                        </span>
-                                                    </h4>
-
-                                                    <span>
-                                                        {isHost
-                                                            ? "Meeting host"
-                                                            : "Participant"}
-                                                    </span>
-
-                                                </div>
-
-                                                <div className="participant-status">
-
-                                                    {micOn ? (
-                                                        <FaMicrophone />
-                                                    ) : (
-                                                        <FaMicrophoneSlash />
-                                                    )}
-
-                                                    {cameraOn ? (
-                                                        <FaVideo />
-                                                    ) : (
-                                                        <FaVideoSlash />
-                                                    )}
-
-                                                </div>
-
-                                                <button className="person-menu-btn">
-                                                    <FaEllipsisV />
-                                                </button>
-
-                                            </div>
-
-                                            {participants
-                                                .filter((participant) => {
-                                                    const participantId = participant.userId?._id?.toString();
-
-                                                    return !waitingUsers.some(
-                                                        (waitingUser) =>
-                                                            waitingUser.userId?.toString() === participantId
-                                                    );
-                                                })
-                                                .map((participant) => {
-
-                                                    const participantUser =
-                                                        participant.userId;
-
-                                                    return (
-                                                        <div
-                                                            className="participant-item"
-                                                            key={participant._id}
-                                                        >
-                                                            <div className="participant-avatar">
-                                                                {participantUser?.fullName
-                                                                    ?.charAt(0)
-                                                                    ?.toUpperCase() || "U"}
-                                                            </div>
-
-                                                            <div className="participant-info">
-
-                                                                <h4>
-                                                                    {participantUser?.fullName ||
-                                                                        "Unknown User"}
-                                                                </h4>
-
-                                                                <span>
-                                                                    {participantUser?._id ===
-                                                                        meeting?.host?._id
-                                                                        ? "Meeting host"
-                                                                        : "Participant"}
-                                                                </span>
-
-                                                            </div>
-
-                                                            <div className="participant-status">
-
-                                                                {participant.isMuted ? (
-                                                                    <FaMicrophoneSlash />
-                                                                ) : (
-                                                                    <FaMicrophone />
-                                                                )}
-
-                                                                {participant.isCameraOn ? (
-                                                                    <FaVideo />
-                                                                ) : (
-                                                                    <FaVideoSlash />
-                                                                )}
-
-                                                            </div>
-
-                                                            <button className="person-menu-btn">
-                                                                <FaEllipsisV />
-                                                            </button>
-
+                                                return (
+                                                    <div
+                                                        className="participant-item"
+                                                        key={person.socketId}
+                                                    >
+                                                        <div className="participant-avatar">
+                                                            {person.fullName?.charAt(0)?.toUpperCase() || "U"}
                                                         </div>
-                                                    );
-                                                })}
 
+                                                        <div className="participant-info">
+                                                            <h4>
+                                                                {person.fullName || "Participant"}
+                                                                {isMe && (
+                                                                    <span className="you-label"> (You)</span>
+                                                                )}
+                                                            </h4>
+
+                                                            <span>
+                                                                {person.isHost
+                                                                    ? "Meeting host"
+                                                                    : "Participant"}
+                                                            </span>
+                                                        </div>
+
+                                                        <div className="participant-status">
+                                                            {person.cameraOn
+                                                                ? <FaVideo />
+                                                                : <FaVideoSlash />}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     )}
 

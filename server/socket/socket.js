@@ -1,7 +1,36 @@
 const Meeting = require("../models/meetingModel");
 const Participant = require("../models/participantModel");
-const MeetingMessage =
-    require("../models/meetingMessageModel");
+const MeetingMessage = require("../models/meetingMessageModel");
+
+
+const broadcastMeetingParticipants = async (io, meetingId) => {
+    try {
+        const meetingSockets = await io.in(meetingId).fetchSockets();
+
+        const participants = meetingSockets
+            .filter(
+                (s) =>
+                    s.meetingId === meetingId &&
+                    s.isAdmitted === true &&
+                    s.userId
+            )
+            .map((s) => ({
+                socketId: s.id,
+                userId: s.userId,
+                fullName: s.fullName || "User",
+                cameraOn: s.cameraOn ?? true,
+                isHost: s.isHost === true,
+            }));
+
+        io.to(meetingId).emit(
+            "meeting_participants_updated",
+            participants
+        );
+    } catch (error) {
+        console.error("PARTICIPANTS BROADCAST ERROR:", error);
+    }
+};
+
 
 const setupSocket = (io) => {
     io.on("connection", (socket) => {
@@ -12,7 +41,7 @@ const setupSocket = (io) => {
 
                 try {
 
-                    const { meetingId, userId, text} = data;
+                    const { meetingId, userId, text } = data;
 
                     if (!meetingId || !userId || !text?.trim()) {
                         console.log("CHAT DATA MISSING");
@@ -107,12 +136,7 @@ const setupSocket = (io) => {
 
                 const existingSockets = await io.in(meetingId).fetchSockets();
 
-                // console.log("👑 HOST JOINED:", {
-                //     socketId: socket.id,
-                //     userId,
-                //     fullName: socket.fullName,
-                //     meetingId
-                // });
+                
 
                 existingSockets.forEach((existingSocket) => {
                     if (existingSocket.id === socket.id) return;
@@ -123,6 +147,8 @@ const setupSocket = (io) => {
                         cameraOn: existingSocket.cameraOn ?? true
                     });
                 });
+
+                await broadcastMeetingParticipants(io, socket.meetingId);
 
                 socket.to(meetingId).emit(
                     "participant_joined",
@@ -304,7 +330,7 @@ const setupSocket = (io) => {
                                 cameraOn: socket.cameraOn,
                             }
                         );
-
+                    await broadcastMeetingParticipants(io, meetingId);
                     return;
                 }
 
@@ -356,8 +382,7 @@ const setupSocket = (io) => {
                     return;
                 }
 
-                const targetSocket =
-                    io.sockets.sockets.get(socketId);
+                const targetSocket = io.sockets.sockets.get(socketId);
 
                 if (!targetSocket) {
                     console.log("Waiting user socket not found:", socketId);
@@ -561,7 +586,7 @@ const setupSocket = (io) => {
         socket.on(
             "leave_meeting",
             () => {
-                handleParticipantLeave(socket);
+                handleParticipantLeave(socket, io);
             }
         );
 
@@ -570,13 +595,14 @@ const setupSocket = (io) => {
             () => {
 
                 console.log("User disconnected:", socket.id);
-                handleParticipantLeave(socket);
+                handleParticipantLeave(socket, io);
             }
         );
     });
 };
 
-const handleParticipantLeave = async (socket) => {
+
+const handleParticipantLeave = async (socket, io) => {
     const { meetingId, userId, fullName } = socket;
 
     if (!meetingId) {
@@ -585,31 +611,40 @@ const handleParticipantLeave = async (socket) => {
     }
 
     try {
-        await Participant.findOneAndUpdate(
-            {
-                meetingId: (await Meeting.findOne({ meetingId }))?._id, userId,
-            },
-            {
-                leftAt: new Date(),
-            }
-        );
+        const meeting = await Meeting.findOne({ meetingId });
+
+        if (meeting && userId) {
+            await Participant.findOneAndUpdate(
+                {
+                    meetingId: meeting._id,
+                    userId,
+                    leftAt: null,
+                },
+                {
+                    leftAt: new Date(),
+                }
+            );
+        }
     } catch (error) {
-        console.error("Participant leave DB update error:",error );
+        console.error("Participant leave DB update error:", error);
     }
 
-    socket.to(meetingId).emit(
-        "participant_left",
-        {
-            socketId: socket.id,
-            userId,
-            fullName: fullName || "User",
-        }
-    );
+    socket.to(meetingId).emit("participant_left", {
+        socketId: socket.id,
+        userId,
+        fullName: fullName || "User",
+    });
 
-    console.log( `${fullName || "User"} left meeting ${meetingId}`);
+    console.log(`${fullName || "User"} left meeting ${meetingId}`);
+
     socket.leave(meetingId);
+
+    await broadcastMeetingParticipants(io, meetingId);
+
     socket.meetingId = null;
     socket.isAdmitted = false;
+    socket.pendingMeetingId = null;
 };
+
 
 module.exports = setupSocket;
