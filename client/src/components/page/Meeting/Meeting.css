@@ -1,0 +1,2831 @@
+/* =========================================================
+   MEETING PAGE
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+.meeting-page {
+    width: 100%;
+    height: 100vh;
+    background: #0f0f0f;
+    color: #fff;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+
+/* =========================================================
+   TOP HEADER
+========================================================= */
+
+.meeting-header {
+    height: 58px;
+    min-height: 58px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: #0f0f0f;
+    position: relative;
+    z-index: 20;
+}
+
+.meeting-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.meeting-time {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.meeting-code {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 2px 4px;
+    border-radius: 2px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.meeting-code:hover {
+    background: #3c4043;
+}
+
+.meeting-info-btn {
+    width: 28px;
+    height: 28px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: transparent;
+    color: #bdbdbd;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    padding: 0;
+}
+
+.meeting-info-btn:hover {
+    background: #292a2d;
+    color: #ffffff;
+}
+
+.meeting-info-btn svg {
+    font-size: 16px;
+}
+.meeting-id-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ddd;
+    font-size: 14px;
+}
+
+.meeting-id-box span {
+    color: #aaa;
+}
+
+.meeting-id-box strong {
+    color: #fff;
+    font-weight: 500;
+}
+
+.meeting-id-box button {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.meeting-id-box button:hover {
+    background: #292929;
+}
+
+.meeting-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-icon-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: #202124;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.header-icon-btn:hover,
+.active-header-btn {
+    background: #3c4043;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.meeting-main {
+    position: relative;
+
+    width: 100%;
+    height: calc(100vh - 130px);
+
+    overflow: hidden;
+
+    flex: 1;
+    min-height: 0;
+}
+.local-video-element {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transform: scaleX(-1);
+}
+
+.camera-hidden {
+    visibility: hidden;
+}
+
+.camera-off-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-indicator {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    height: 24px;
+    padding: 5px 8px;
+
+    border-radius: 8px;
+
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.audio-indicator span {
+    display: block;
+
+    width: 3px;
+    height: 5px;
+
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    transition: height 0.15s ease;
+}
+
+/* Mic ON but silent */
+.audio-indicator:not(.speaking) span {
+    height: 5px;
+}
+
+/* Mic ON + speaking */
+.audio-indicator.speaking span:nth-child(1) {
+    animation: audioWave 0.55s ease-in-out infinite alternate;
+}
+
+.audio-indicator.speaking span:nth-child(2) {
+    animation: audioWave 0.4s ease-in-out infinite alternate;
+}
+
+.audio-indicator.speaking span:nth-child(3) {
+    animation: audioWave 0.3s ease-in-out infinite alternate;
+}
+
+.audio-indicator.speaking span:nth-child(4) {
+    animation: audioWave 0.45s ease-in-out infinite alternate;
+}
+
+.audio-indicator.speaking span:nth-child(5) {
+    animation: audioWave 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes audioWave {
+    from {
+        height: 5px;
+    }
+
+    to {
+        height: 18px;
+    }
+}
+/* =========================================================
+   VIDEO AREA
+========================================================= */
+
+.video-hidden {
+    display: none;
+}
+.video-area {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+
+    gap: 10px;
+    padding: 10px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    align-content: stretch;
+    justify-content: stretch;
+}
+/* =========================================================
+   VIDEO CARD
+========================================================= */
+.video-card {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    background: #202124;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #292a2d;
+}
+/* =========================================================
+   LOCAL VIDEO
+========================================================= */
+
+.local-video {
+    background: #646c4d;
+}
+
+.camera-placeholder,
+.camera-off,
+.participant-placeholder {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.user-avatar,
+.participant-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #5b6fd8;
+    color: #fff;
+
+    font-size: 40px;
+    font-weight: 500;
+}
+
+.participant-avatar {
+    background: #0b75c9;
+}
+
+.participant-avatar.purple {
+    background: #6d5dd3;
+}
+
+.participant-avatar.green {
+    background: #4e9d6d;
+}
+
+.camera-status {
+    color: #ddd;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   VIDEO NAME
+========================================================= */
+
+.video-name {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.55);
+
+    font-size: 14px;
+    color: white;
+}
+
+.video-name span {
+    display: flex;
+    align-items: center;
+}
+
+.video-name small {
+    margin-left: 3px;
+    color: #ccc;
+}
+
+.video-name .muted {
+    color: #ff6b6b;
+}
+
+
+/* =========================================================
+   CHAT / PEOPLE SIDE PANEL
+========================================================= */
+
+
+.side-panel {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    width: 380px;
+    min-width: 380px;
+    height: 100%;
+
+    background: #202124;
+
+    border-radius: 18px;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 1000;
+
+    animation: panelOpen 0.2s ease;
+}
+
+@keyframes panelOpen {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+/* =========================================
+   PEOPLE PANEL
+========================================= */
+
+.people-panel {
+    position: fixed;
+
+    top: 70px;
+    right: 18px;
+
+    width: 380px;
+
+    height: 620px;
+
+    background: #1f1f1f;
+
+    border-radius: 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    z-index: 99999;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+
+    color: #fff;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.people-panel-header {
+    height: 62px;
+
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    flex-shrink: 0;
+}
+
+.people-panel-header h2 {
+    margin: 0;
+
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.people-close-btn {
+    width: 38px;
+    height: 38px;
+
+    border: none;
+    background: transparent;
+
+    color: #ddd;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.people-close-btn:hover {
+    background: #303030;
+}
+
+
+/* =========================================
+   ADD PEOPLE
+========================================= */
+
+.add-people-btn {
+    width: max-content;
+
+    height: 48px;
+
+    margin: 4px 20px 20px;
+
+    padding: 0 18px;
+
+    border: none;
+
+    border-radius: 25px;
+
+    background: #0b82c9;
+
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.add-people-btn:hover {
+    background: #0878ba;
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.people-search {
+    height: 54px;
+
+    margin: 0 20px 20px;
+
+    padding: 0 15px;
+
+    border: 1px solid #777;
+
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    flex-shrink: 0;
+}
+
+.people-search svg {
+    color: #bcbcbc;
+
+    font-size: 20px;
+}
+
+.people-search input {
+    width: 100%;
+
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #fff;
+
+    font-size: 16px;
+}
+
+.people-search input::placeholder {
+    color: #b7b7b7;
+}
+
+
+/* =========================================
+   MAIN SCROLL AREA
+========================================= */
+
+.people-scroll-area {
+    flex: 1;
+    min-height: 0;
+
+    overflow: hidden;
+
+    padding: 0 20px 20px;
+}
+.people-scroll-area::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* =========================================
+   SECTION
+========================================= */
+
+.people-section {
+    margin-bottom: 15px;
+}
+
+.section-label {
+    padding: 8px 18px;
+
+    color: #9aa0a6;
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+
+/* =========================================
+   PEOPLE CARD
+========================================= */
+
+.people-card {
+    border: 1px solid #4b4b4b;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    background: #202124;
+}
+
+
+/* =========================================
+   CONTRIBUTORS HEADER
+========================================= */
+
+.people-card-header {
+    width: 100%;
+
+    height: 52px;
+
+    padding: 0 18px;
+
+    border: none;
+
+    border-bottom: 1px solid #414141;
+
+    background: transparent;
+
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    cursor: pointer;
+}
+
+.people-card-header:hover {
+    background: #272727;
+}
+
+.people-card-header strong {
+    font-size: 16px;
+
+    font-weight: 600;
+}
+
+.contributors-right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.contributors-right span {
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+.contributors-arrow {
+    font-size: 22px;
+
+    color: #c8c8c8;
+
+    line-height: 1;
+
+    transition: transform 0.2s ease;
+}
+
+.contributors-arrow.open {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================
+   PARTICIPANT LIST
+========================================= */
+
+.participants-list {
+    max-height: 174px;
+
+    overflow-y: auto;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.participants-list::-webkit-scrollbar {
+    display: none;
+}
+/* =========================================
+   SMALL PARTICIPANT ROW
+========================================= */
+
+.participant-item {
+    min-height: 58px;
+
+    padding: 7px 10px 7px 14px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    border-bottom: 1px solid #3b3b3b;
+}
+
+.participant-item:last-child {
+    border-bottom: none;
+}
+
+.participant-item:hover {
+    background: #292929;
+}
+
+
+/* =========================================
+   SMALL AVATAR
+========================================= */
+
+.participant-avatar {
+    width: 36px;
+    height: 36px;
+
+    min-width: 36px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #287be8;
+
+    color: white;
+
+    font-size: 16px;
+}
+
+
+/* =========================================
+   USER INFO
+========================================= */
+
+.participant-info {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.participant-info h4 {
+    margin: 0;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #eeeeee;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.participant-info span {
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 12px;
+
+    color: #b4b4b4;
+}
+
+.you-label {
+    color: #b4b4b4;
+}
+
+
+/* =========================================
+   MIC + CAMERA
+========================================= */
+
+.participant-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #eeeeee;
+
+    flex-shrink: 0;
+}
+
+.participant-status svg {
+    width: 14px;
+    height: 14px;
+}
+
+
+/* =========================================
+   THREE DOT
+========================================= */
+
+.person-menu-btn {
+    width: 30px;
+    height: 30px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #d0d0d0;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+}
+
+.person-menu-btn:hover {
+    background: #353535;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .people-panel {
+        top: 10px;
+        right: 10px;
+
+        width: calc(100vw - 20px);
+
+        height: calc(100vh - 20px);
+
+        border-radius: 18px;
+    }
+
+    .people-panel-header {
+        padding: 0 16px;
+    }
+
+    .add-people-btn {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .people-search {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .people-scroll-area {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+.waiting-participant {
+    gap: 12px;
+}
+
+.waiting-participant .participant-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.waiting-participant .participant-info h4 {
+    margin: 0;
+}
+
+.waiting-participant .participant-info span {
+    display: block;
+    margin-top: 3px;
+}
+
+.waiting-participant .participant-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.waiting-participant .admit-btn {
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* =====================================================
+   IN-CALL CHAT PANEL
+===================================================== */
+
+.meeting-chat-panel {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
+
+    width: 450px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #1f1f1f;
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    z-index: 100;
+
+    color: #ffffff;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.meeting-chat-header {
+
+    min-height: 82px;
+
+    padding: 0 28px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+
+.meeting-chat-header h3 {
+
+    margin: 0;
+
+    font-size: 21px;
+
+    font-weight: 500;
+
+    color: #f1f1f1;
+}
+
+
+.chat-close-btn {
+
+    width: 42px;
+
+    height: 42px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #d8d8d8;
+
+    font-size: 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.chat-close-btn:hover {
+
+    background: #303030;
+
+}
+
+
+/* =====================================================
+   INFO BOX
+===================================================== */
+
+.chat-info-box {
+
+    margin: 0 16px 18px;
+
+    padding: 16px 18px;
+
+    display: flex;
+
+    gap: 10px;
+
+    background: #292a2d;
+
+    border-radius: 8px;
+
+    color: #d7d7d7;
+}
+
+
+.chat-info-icon {
+
+    color: #8ab4f8;
+
+    font-size: 17px;
+
+    padding-top: 2px;
+}
+
+
+.chat-info-title {
+
+    font-size: 14px;
+
+    color: #8ab4f8;
+
+    margin-bottom: 12px;
+}
+
+
+.chat-info-text {
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    color: #dedede;
+}
+
+
+/* =====================================================
+   MESSAGES AREA
+===================================================== */
+
+.meeting-chat-messages {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 10px 16px 20px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+.meeting-chat-messages::-webkit-scrollbar {
+
+    width: 8px;
+
+}
+
+
+.meeting-chat-messages::-webkit-scrollbar-thumb {
+
+    background: #777;
+
+    border-radius: 20px;
+
+}
+
+
+.meeting-chat-messages::-webkit-scrollbar-track {
+
+    background: transparent;
+
+}
+
+
+/* =====================================================
+   MESSAGE ROW
+===================================================== */
+
+.meeting-message {
+
+    display: flex;
+
+    width: 100%;
+
+    gap: 10px;
+}
+
+
+.message-other {
+
+    justify-content: flex-start;
+
+}
+
+
+.message-own {
+
+    justify-content: flex-end;
+
+}
+
+
+/* =====================================================
+   AVATAR
+===================================================== */
+
+.message-avatar {
+
+    flex: 0 0 40px;
+
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background: #5666c9;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+
+    color: white;
+
+}
+
+
+.message-avatar img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+
+/* =====================================================
+   MESSAGE CONTENT
+===================================================== */
+
+.message-content {
+
+    max-width: 78%;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.message-other .message-content {
+
+    align-items: flex-start;
+
+}
+
+
+.message-own .message-content {
+
+    align-items: flex-end;
+
+}
+
+
+/* =====================================================
+   SENDER NAME
+===================================================== */
+
+.message-sender {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin: 0 0 7px 14px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #e3e3e3;
+}
+
+
+.message-sender span {
+
+    font-weight: 400;
+
+    color: #bcbcbc;
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   OWN MESSAGE TIME
+===================================================== */
+
+.message-own-time {
+
+    margin-right: 4px;
+
+    margin-bottom: 5px;
+
+    font-size: 12px;
+
+    color: #bdbdbd;
+}
+
+
+/* =====================================================
+   BUBBLE
+===================================================== */
+
+.message-bubble {
+
+    padding: 12px 16px;
+
+    border-radius: 20px;
+
+    font-size: 15px;
+
+    line-height: 1.4;
+
+    word-break: break-word;
+}
+
+
+.message-other .message-bubble {
+
+    background: #303030;
+
+    color: #eeeeee;
+
+    border-top-left-radius: 6px;
+}
+
+
+.message-own .message-bubble {
+
+    background: #056394;
+
+    color: white;
+
+    border-top-right-radius: 6px;
+}
+
+
+/* =====================================================
+   INPUT AREA
+===================================================== */
+
+.meeting-chat-input {
+
+    margin: 0 20px 18px;
+
+    min-height: 58px;
+
+    border: 1px solid #555;
+
+    border-radius: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 8px 0 18px;
+
+    background: #202124;
+}
+
+
+.meeting-chat-input input {
+
+    flex: 1;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    min-width: 0;
+}
+
+
+.meeting-chat-input input::placeholder {
+
+    color: #b7b7b7;
+
+}
+
+
+.meeting-chat-input button {
+
+    width: 42px;
+
+    height: 42px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #9e9e9e;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    border-radius: 50%;
+
+    transition: 0.2s;
+}
+
+
+.meeting-chat-input button:not(:disabled):hover {
+
+    background: #333;
+
+    color: #ffffff;
+
+}
+
+
+.meeting-chat-input button:disabled {
+
+    opacity: 0.45;
+
+    cursor: not-allowed;
+
+}
+
+/* =========================================================
+   MORE MENU
+========================================================= */
+
+.more-menu {
+    position: absolute;
+
+    right: 403px;
+    bottom: -1px;
+
+    width: 230px;
+
+    background: #292a2d;
+
+    border-radius: 14px;
+
+    padding: 10px;
+
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+
+    z-index: 50;
+}
+
+.more-menu-title {
+    padding: 10px;
+
+    color: #aaa;
+    font-size: 12px;
+}
+
+.more-menu button {
+    width: 100%;
+
+    height: 44px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: transparent;
+    color: white;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 0 12px;
+
+    cursor: pointer;
+}
+
+.more-menu button:hover {
+    background: #3c4043;
+}
+
+
+/* =========================================================
+   BOTTOM CONTROLS
+   GOOGLE MEET STYLE
+========================================================= */
+/* =========================================================
+   BOTTOM CONTROLS
+   GOOGLE MEET STYLE
+========================================================= */
+
+.meeting-controls {
+    height: 82px;
+    min-height: 82px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    padding: 0 20px;
+
+    background: #0f0f0f;
+
+    z-index: 30;
+}
+
+
+/* =========================================================
+   CONTROL GROUP
+========================================================= */
+
+.control-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 7px 12px;
+
+    border-radius: 13px;
+
+    background: #202124;
+}
+
+
+/* =========================================================
+   ALL CONTROL BUTTONS
+========================================================= */
+
+.meeting-controls button {
+    width: 55px;
+    height: 48px;
+
+    border: 0;
+    border-radius: 15%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #161717;
+    color: white;
+
+    font-size: 12px;
+
+    outline: none;
+}
+
+
+/* =========================================================
+   CONTROL BUTTON
+========================================================= */
+
+.control-btn {
+    width: 68px;
+    height: 58px;
+
+    padding: 6px 8px;
+
+    border: 1px solid #1B414C;
+    border-radius: 14px;
+
+    background: #0D303C;
+    color: #B7C9CE;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    outline: none;
+    appearance: none;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.control-btn svg {
+    font-size: 17px;
+    line-height: 1;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.control-btn span {
+    font-size: 9px;
+    font-weight: 500;
+
+    line-height: 1;
+
+    white-space: nowrap;
+
+    color: inherit;
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.control-btn:hover {
+    background: #3c4043;
+
+    color: #FFFFFF;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   ACTIVE
+========================================================= */
+
+.control-btn.control-active {
+    background: #3c4043;
+
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 1px rgba(3, 159, 133, 0.08),
+        0 7px 20px rgba(3, 159, 133, 0.12);
+}
+
+.control-btn.control-active:hover {
+    background: #3c4043 !important;
+
+    border-color: #039F85;
+
+    color: #FFFFFF;
+}
+
+
+/* =========================================================
+   MIC / CAMERA OFF
+========================================================= */
+
+.control-btn.control-off {
+    background: rgba(239, 91, 103, 0.10) !important;
+
+    border-color: rgba(239, 91, 103, 0.40);
+
+    color: #FF9AA3;
+
+    box-shadow: none;
+}
+
+.control-btn.control-off:hover {
+    background: rgba(239, 91, 103, 0.16) !important;
+
+    border-color: rgba(239, 91, 103, 0.60);
+
+    color: #FFB4BA;
+}
+
+
+/* =========================================================
+   HAND ACTIVE
+========================================================= */
+
+.control-btn.hand-active {
+    background: rgba(3, 159, 133, 0.17);
+
+    border-color: var(--primary);
+
+    color: #66D6C5;
+
+    box-shadow:
+        0 7px 20px rgba(3, 159, 133, 0.12);
+}
+
+.control-btn.hand-active:hover {
+    background: rgba(3, 159, 133, 0.24);
+
+    color: #FFFFFF;
+}
+
+
+/* =========================================================
+   EMOJI BUTTON
+========================================================= */
+
+.emoji-control-btn {
+    width: 55px !important;
+    height: 55px !important;
+
+    min-width: 55px;
+
+    border: 1px solid #1B414C !important;
+
+    border-radius: 50% !important;
+
+    background: #0D303C !important;
+
+    color: #FFFFFF;
+
+    font-size: 25px !important;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.emoji-control-btn:hover {
+    background: #3c4043 !important;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   LEAVE BUTTON
+   SAME CONTROL GROUP
+========================================================= */
+
+.leave-btn {
+    position: static !important;
+
+    width: 68px !important;
+    min-width: 68px !important;
+    height: 50px !important;
+
+    padding: 6px 8px !important;
+
+    margin: 0 !important;
+
+    border: 1px solid rgba(239, 91, 103, 0.35) !important;
+
+    border-radius: 14px !important;
+
+    background: #D94855 !important;
+
+    color: #FFFFFF !important;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    outline: none;
+    appearance: none;
+
+    box-sizing: border-box;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* =========================================================
+   LEAVE ICON
+========================================================= */
+
+.leave-btn svg {
+    font-size: 17px;
+
+    line-height: 1;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   LEAVE TEXT
+========================================================= */
+
+.leave-btn span {
+    font-size: 9px;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   LEAVE HOVER
+========================================================= */
+
+.leave-btn:hover {
+    background: #C83D4A !important;
+
+    border-color: #EF5B67 !important;
+
+    color: #FFFFFF !important;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 22px rgba(239, 91, 103, 0.22);
+}
+
+
+/* =========================================================
+   LEAVE ACTIVE
+========================================================= */
+
+.leave-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   REMOVE FOCUS BORDER
+========================================================= */
+
+.control-btn:focus,
+.leave-btn:focus,
+.emoji-control-btn:focus {
+    outline: none;
+}
+
+
+/* =========================================================
+   ACCESSIBILITY FOCUS
+========================================================= */
+
+.control-btn:focus-visible {
+    box-shadow:
+        0 0 0 2px #081F29,
+        0 0 0 4px rgba(3, 159, 133, 0.45);
+}
+
+.leave-btn:focus-visible {
+    box-shadow:
+        0 0 0 2px #081F29,
+        0 0 0 4px rgba(239, 91, 103, 0.40);
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.people-section::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar {
+    width: 5px;
+}
+
+.people-section::-webkit-scrollbar-thumb,
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 10px;
+}
+
+.remote-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: #202124;
+}
+
+.camera-off-screen {
+    width: 100%;
+    height: 100%;
+    background: #202124;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.camera-off-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #5f6368;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.camera-status {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+
+.join-request-popup {
+    position: fixed;
+    top: 85px;
+    right: 24px;
+    width: 360px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    z-index: 9999;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+    border: 1px solid #e5e7eb;
+}
+
+.join-request-content {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.join-request-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #00a884;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.join-request-text h3 {
+    margin: 0 0 5px;
+    font-size: 17px;
+    color: #202124;
+}
+
+.join-request-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #5f6368;
+    line-height: 1.4;
+}
+
+.join-request-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.join-request-actions button {
+    border: none;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.deny-request-btn {
+    background: #f1f3f4;
+    color: #202124;
+}
+
+.deny-request-btn:hover {
+    background: #e5e7eb;
+}
+
+.admit-request-btn {
+    background: #00a884;
+    color: #ffffff;
+}
+
+.admit-request-btn:hover {
+    background: #008f72;
+}
+
+
+.meeting-waiting-screen {
+    min-height: 100vh;
+    background: #202124;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+}
+
+.waiting-box {
+    width: 420px;
+    max-width: calc(100% - 40px);
+    text-align: center;
+    background: #292a2d;
+    padding: 42px 35px;
+    border-radius: 20px;
+}
+
+.waiting-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: #00a884;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+.waiting-box h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+}
+
+.waiting-box p {
+    margin: 0 0 8px;
+    color: #d1d5db;
+}
+
+.waiting-box span {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.waiting-box button {
+    margin-top: 24px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    background: #00a884;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 600;
+}
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .meeting-info {
+        display: none;
+    }
+
+    .people-panel,
+    .side-panel {
+        position: absolute;
+
+        right: 18px;
+        top: 0;
+        bottom: 12px;
+
+        width: 360px;
+        min-width: 360px;
+
+        z-index: 100;
+    }
+
+    .video-area {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, minmax(0, 1fr));
+    }
+
+    .control-btn span {
+        display: none;
+    }
+
+    .control-btn {
+        width: 50px;
+        padding: 0;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .meeting-header {
+        padding: 0 12px;
+    }
+
+    .meeting-brand span {
+        display: none;
+    }
+
+    .meeting-main {
+        padding: 0 8px 8px;
+    }
+
+    .video-area {
+        gap: 7px;
+    }
+
+    .video-card {
+        border-radius: 12px;
+    }
+
+    .people-panel,
+    .side-panel {
+        left: 8px;
+        right: 8px;
+
+        width: auto;
+        min-width: 0;
+    }
+
+    .meeting-controls {
+        height: 72px;
+        min-height: 72px;
+
+        padding: 0 8px;
+    }
+
+    .control-group {
+        gap: 4px;
+        padding: 5px;
+    }
+
+    .control-btn,
+    .emoji-control-btn {
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px;
+    }
+
+    .leave-btn {
+        position: static;
+
+        width: 48px;
+        height: 44px;
+
+        margin-left: 8px;
+    }
+
+    .user-avatar,
+    .participant-avatar {
+        width: 70px;
+        height: 70px;
+
+        font-size: 28px;
+    }
+}
+
+/* =========================================
+   GOOGLE MEET STYLE - VIDEO LAYOUT
+========================================= */
+
+.meeting-page {
+    background: #202124;
+    color: #f1f3f4;
+}
+
+.meeting-header {
+    background: #202124;
+    padding: 0 24px;
+    flex-shrink: 0;
+}
+
+.meeting-main {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    height: auto;
+    padding: 8px 12px;
+    background: #202124;
+}
+
+.video-area {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    gap: 12px;
+    padding: 4px;
+    align-content: center;
+    justify-content: center;
+    overflow-y: auto;
+    grid-auto-flow: row;
+}
+
+/* =========================================
+   VIDEO CARD
+========================================= */
+
+.video-card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #303134;
+    border: 1px solid #45464a;
+    border-radius: 16px;
+
+    isolation: isolate;
+    transition: border-color 0.2s ease;
+}
+
+.video-card:hover {
+    border-color: #686a70;
+}
+
+/* Local camera card */
+.video-card.local-video {
+    background: #303134;
+}
+
+/* Video should fill the complete card */
+.local-video-element,
+.remote-video {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+    object-fit: cover;
+    border-radius: inherit;
+    background: #303134;
+}
+
+/* Mirror only the local camera */
+.local-video-element {
+    transform: scaleX(-1);
+}
+
+/* Keep hidden video completely invisible */
+.video-hidden {
+    display: none !important;
+}
+
+/* =========================================
+   LOCAL CAMERA OFF OVERLAY
+========================================= */
+
+.camera-off-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    padding: 20px;
+    background: radial-gradient(circle at center,
+            #3c4048 0%,
+            #303134 58%,
+            #242529 100%);
+
+    color: #f1f3f4;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.camera-off-overlay .user-avatar {
+    width: clamp(76px, 10vw, 112px);
+    height: clamp(76px, 10vw, 112px);
+    min-width: 0;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #8ab4f8;
+    color: #202124;
+
+    font-size: clamp(30px, 4vw, 44px);
+    font-weight: 500;
+
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+}
+
+.camera-off-overlay>span {
+    color: #e8eaed;
+    font-size: 14px;
+    letter-spacing: 0.1px;
+}
+
+/* =========================================
+   REMOTE CAMERA OFF
+========================================= */
+
+.camera-off-ui {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    background: radial-gradient(circle at center,
+            #3c4048 0%,
+            #303134 60%,
+            #242529 100%);
+
+    color: #e8eaed;
+}
+
+.camera-off-ui .camera-off-avatar {
+    width: clamp(72px, 9vw, 104px);
+    height: clamp(72px, 9vw, 104px);
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #8ab4f8;
+    color: #202124;
+
+    font-size: 34px;
+}
+
+.camera-off-text {
+    color: #e8eaed;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* =========================================
+   NAME LABEL
+========================================= */
+
+.video-name {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 5;
+
+    max-width: calc(100% - 64px);
+    min-height: 34px;
+    padding: 7px 11px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+
+    background: rgba(32, 33, 36, 0.78);
+    color: #f1f3f4;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.video-name svg {
+    flex-shrink: 0;
+    font-size: 13px;
+}
+
+.video-name svg:has(+ *) {
+    color: #e8eaed;
+}
+
+/* =========================================
+   AUDIO ACTIVITY INDICATOR
+========================================= */
+
+.audio-indicator {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 6;
+
+    height: 32px;
+    min-width: 34px;
+    padding: 6px 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+
+    border-radius: 9px;
+    background: rgba(32, 33, 36, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.audio-indicator span {
+    width: 3px;
+    height: 5px;
+    border-radius: 4px;
+    background: #e8eaed;
+}
+
+.audio-indicator.speaking span {
+    background: #81c995;
+}
+
+/* =========================================
+   REMOTE CAMERA STATUS ICON
+========================================= */
+
+.camera-status-icon {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 5;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: rgba(32, 33, 36, 0.82);
+    color: #e8eaed;
+    font-size: 14px;
+
+    backdrop-filter: blur(8px);
+}
+
+/* =========================================
+   GOOGLE MEET STYLE BOTTOM CONTROLS
+========================================= */
+
+.meeting-controls {
+    position: relative;
+    z-index: 30;
+
+    width: 100%;
+    height: 88px;
+    min-height: 88px;
+    padding: 12px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #202124;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+/* Override broad button rules */
+.meeting-controls .control-btn {
+    width: 52px;
+    min-width: 52px;
+    height: 48px;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: 28px;
+
+    background: #3c4043;
+    color: #f1f3f4;
+
+    cursor: pointer;
+    box-shadow: none;
+    transform: none;
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.meeting-controls .control-btn svg {
+    font-size: 19px;
+}
+
+.meeting-controls .control-btn span {
+    display: none;
+}
+
+.meeting-controls .control-btn:hover {
+    background: #4a4d51;
+    color: #ffffff;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Camera or microphone OFF */
+.meeting-controls .control-btn.control-off {
+    background: #ea4335 !important;
+    border: none;
+    color: #ffffff !important;
+}
+
+.meeting-controls .control-btn.control-off:hover {
+    background: #d93025 !important;
+}
+
+/* Active panel or raised hand */
+.meeting-controls .control-btn.control-active,
+.meeting-controls .control-btn.hand-active {
+    background: #8ab4f8;
+    color: #202124;
+    border: none;
+    box-shadow: none;
+}
+
+.meeting-controls .control-btn.control-active:hover,
+.meeting-controls .control-btn.hand-active:hover {
+    background: #aecbfa;
+    color: #202124;
+}
+
+/* Emoji */
+.meeting-controls .emoji-control-btn {
+    width: 48px !important;
+    min-width: 48px;
+    height: 48px !important;
+    padding: 0;
+
+    border: none !important;
+    border-radius: 50% !important;
+
+    background: #3c4043 !important;
+    color: #ffffff;
+
+    font-size: 23px !important;
+}
+
+.meeting-controls .emoji-control-btn:hover {
+    background: #4a4d51 !important;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Leave button */
+.meeting-controls .leave-btn {
+    width: 64px !important;
+    min-width: 64px !important;
+    height: 48px !important;
+    padding: 0 14px !important;
+
+    border: none !important;
+    border-radius: 28px !important;
+
+    background: #ea4335 !important;
+    color: #ffffff !important;
+}
+
+.meeting-controls .leave-btn:hover {
+    background: #d93025 !important;
+    transform: none;
+    box-shadow: none;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.video-grid .video-card {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #202124;
+    border-radius: 12px;
+}
+
+.video-grid video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.video-grid .video-card video {
+    border-radius: 12px;
+}
+
+
+.join-request-notification {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #303134;
+    color: #fff;
+    border: 1px solid #5f6368;
+    border-radius: 14px;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.join-request-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #3c4043;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.join-request-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.join-request-details strong {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.join-request-details span {
+    color: #bdc1c6;
+    font-size: 12px;
+}
+
+.join-admit-btn,
+.join-deny-btn {
+    border: none;
+    border-radius: 20px;
+    padding: 9px 15px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.join-admit-btn {
+    background: #8ab4f8;
+    color: #202124;
+}
+
+.join-admit-btn:hover {
+    background: #aecbfa;
+}
+
+.join-deny-btn {
+    background: transparent;
+    color: #e8eaed;
+}
+
+.join-deny-btn:hover {
+    background: #45474b;
+}
+@media (max-width: 768px) {
+    .video-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 10px;
+    }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+    .meeting-header {
+        height: 54px;
+        min-height: 54px;
+        padding: 0 12px;
+    }
+
+    .meeting-main {
+        padding: 5px;
+    }
+
+    .video-area {
+        gap: 8px;
+        padding: 3px;
+    }
+
+    .video-card {
+        border-radius: 12px;
+    }
+
+    .video-name {
+        left: 7px;
+        bottom: 7px;
+        min-height: 29px;
+        padding: 5px 8px;
+        gap: 5px;
+        font-size: 11px;
+    }
+
+    .audio-indicator {
+        right: 7px;
+        bottom: 7px;
+        min-width: 28px;
+        height: 28px;
+        padding: 5px 7px;
+    }
+
+    .camera-status-icon {
+        top: 7px;
+        right: 7px;
+        width: 29px;
+        height: 29px;
+    }
+
+    .meeting-controls {
+        height: 76px;
+        min-height: 76px;
+        padding: 8px;
+    }
+
+    .control-group {
+        gap: 7px;
+    }
+
+    .meeting-controls .control-btn {
+        width: 43px;
+        min-width: 43px;
+        height: 43px;
+    }
+
+    .meeting-controls .control-btn svg {
+        font-size: 17px;
+    }
+
+    .meeting-controls .emoji-control-btn {
+        width: 43px !important;
+        min-width: 43px;
+        height: 43px !important;
+        font-size: 20px !important;
+    }
+
+    .meeting-controls .leave-btn {
+        width: 48px !important;
+        min-width: 48px !important;
+        height: 43px !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .control-group {
+        gap: 5px;
+    }
+
+    .meeting-controls .control-btn {
+        width: 38px;
+        min-width: 38px;
+        height: 40px;
+    }
+
+    .meeting-controls .control-btn svg {
+        font-size: 15px;
+    }
+
+    .meeting-controls .emoji-control-btn {
+        width: 38px !important;
+        min-width: 38px;
+        height: 40px !important;
+        font-size: 18px !important;
+    }
+
+    .meeting-controls .leave-btn {
+        width: 43px !important;
+        min-width: 43px !important;
+        height: 40px !important;
+    }
+}
+

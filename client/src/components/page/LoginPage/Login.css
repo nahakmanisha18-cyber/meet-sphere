@@ -1,0 +1,1159 @@
+body {
+    margin: 0;
+
+    background: #fdfcfc;
+    color: #083b4c;
+}
+
+.meet-login-page {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 35px;
+
+    background:
+        radial-gradient(circle at 10% 20%,
+            rgba(4, 160, 133, 0.07),
+            transparent 30%),
+        radial-gradient(circle at 90% 80%,
+            rgba(6, 125, 131, 0.06),
+            transparent 30%),
+        #fdfcfc;
+}
+
+
+
+
+.meet-login-container {
+    width: 929px;
+    max-width: 100%;
+
+    min-height: 700px;
+
+    display: grid;
+    grid-template-columns: 1fr 0.95fr;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 28px;
+
+    border: 1px solid rgba(8, 59, 76, 0.06);
+
+    box-shadow:
+        0 25px 70px rgba(8, 59, 76, 0.12);
+}
+
+
+
+
+.meet-login-left {
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(circle at 10% 5%,
+            rgba(4, 160, 133, 0.17),
+            transparent 30%),
+        radial-gradient(circle at 95% 95%,
+            rgba(6, 125, 131, 0.16),
+            transparent 32%),
+        linear-gradient(145deg,
+            #f6fdfc 0%,
+            #eefaf8 100%);
+}
+
+
+
+
+.meet-shape {
+    position: absolute;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    border: 1px solid rgba(4, 160, 133, 0.10);
+}
+
+.meet-shape-one {
+    width: 280px;
+    height: 280px;
+
+    left: -170px;
+    bottom: 20px;
+}
+
+.meet-shape-two {
+    width: 180px;
+    height: 180px;
+
+    right: -80px;
+    top: 40px;
+}
+
+.meet-shape-three {
+    width: 360px;
+    height: 360px;
+
+    right: -210px;
+    bottom: -200px;
+
+    background: rgba(4, 160, 133, 0.04);
+
+    border: none;
+}
+
+
+
+
+.meet-left-content {
+    position: relative;
+
+    z-index: 2;
+
+    height: 100%;
+
+    padding: 48px 45px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+.meet-logo-box {
+    display: flex;
+    align-items: center;
+}
+
+.meet-logo-box img {
+    width: 235px;
+    max-width: 75%;
+
+    height: auto;
+
+    display: block;
+
+    object-fit: contain;
+}
+
+
+
+
+.meeting-illustration {
+    position: relative;
+
+    width: 100%;
+    height: 245px;
+
+    margin-top: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+.video-circle {
+    width: 160px;
+    height: 160px;
+
+    border-radius: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(145deg,
+            #04a085,
+            #067d83);
+
+    transform: rotate(-4deg);
+
+    box-shadow:
+        0 20px 40px rgba(4, 160, 133, 0.25);
+
+    position: relative;
+}
+
+.video-circle::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -13px;
+
+    border-radius: 55px;
+
+    border: 1px solid rgba(4, 160, 133, 0.14);
+}
+
+
+
+
+.video-camera {
+    width: 82px;
+    height: 58px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #fdfcfc;
+
+    border-radius: 14px;
+}
+
+.video-camera span {
+    width: 0;
+    height: 0;
+
+    margin-left: -2px;
+
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    border-left: 18px solid #04a085;
+}
+
+.video-camera::after {
+    content: "";
+
+    position: absolute;
+
+    right: -22px;
+
+    width: 25px;
+    height: 38px;
+
+    background: #fdfcfc;
+
+    clip-path: polygon(0 25%,
+            100% 0,
+            100% 100%,
+            0 75%);
+}
+
+
+
+
+.meeting-card {
+    position: absolute;
+
+    min-width: 195px;
+
+    padding: 12px 15px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    background: rgba(255, 255, 255, 0.94);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 14px 35px rgba(8, 59, 76, 0.12);
+
+    backdrop-filter: blur(10px);
+}
+
+.meeting-card strong {
+    display: block;
+
+    color: #083b4c;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.meeting-card small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #789097;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+}
+
+
+/* Top card */
+
+.meeting-card-top {
+    top: 10px;
+    left: 0;
+
+    transform: rotate(-5deg);
+}
+
+
+/* Bottom card */
+
+.meeting-card-bottom {
+    right: 0;
+    bottom: 0;
+
+    transform: rotate(4deg);
+}
+
+
+
+
+.login-participant-avatar {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e1f6f1;
+
+    color: #04a085;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* Online */
+
+.online-dot {
+    width: 8px;
+    height: 8px;
+
+    flex-shrink: 0;
+
+    margin-left: auto;
+
+    border-radius: 50%;
+
+    background: #04a085;
+
+    box-shadow:
+        0 0 0 4px rgba(4, 160, 133, 0.10);
+}
+
+
+
+
+.mini-avatars {
+    display: flex;
+
+    flex-shrink: 0;
+
+    padding-left: 4px;
+}
+
+.mini-avatars span {
+    width: 28px;
+    height: 28px;
+
+    margin-left: -6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border: 2px solid #ffffff;
+
+    background: #e2f5f1;
+
+    color: #067d83;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.meeting-check {
+    width: 24px;
+    height: 24px;
+
+    flex-shrink: 0;
+
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e2f7f2;
+
+    color: #04a085;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+
+
+.meet-intro {
+    margin-top: auto;
+
+    padding-top: 10px;
+}
+
+.meet-intro h1 {
+    margin: 0;
+
+    color: #083b4c;
+
+    font-size: 35px;
+
+    line-height: 1.05;
+
+    letter-spacing: -1.8px;
+
+    font-weight: 800;
+}
+
+.meet-intro h1 span {
+    color: #04a085;
+}
+
+.meet-intro p {
+    max-width: 470px;
+
+    margin-top: 16px;
+    margin-bottom: 25px;
+
+    color: #58737b;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+
+
+
+.meet-features {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 5px;
+}
+
+.meet-feature {
+    width: 100%;
+
+    display: grid !important;
+    grid-template-columns: 32px auto !important;
+
+    align-items: center !important;
+
+    column-gap: 12px;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    text-align: left !important;
+}
+
+
+/* Icon */
+
+.meet-feature .feature-icon {
+    width: 32px !important;
+    height: 32px !important;
+
+    min-width: 32px !important;
+    max-width: 32px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border-radius: 50%;
+
+    background: rgba(4, 160, 133, 0.10);
+
+    color: #04a085;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    line-height: 1 !important;
+}
+
+
+/* Text */
+
+.meet-feature>span:last-child {
+    display: block !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    align-self: center !important;
+
+    color: #315761;
+
+    font-size: 14px;
+
+    line-height: 20px !important;
+
+    white-space: nowrap;
+}
+
+
+
+.meet-login-right {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 55px;
+
+    background: #ffffff;
+}
+
+
+
+
+.close-login {
+    position: absolute;
+
+    top: 25px;
+    right: 28px;
+
+    width: 35px;
+    height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    background: transparent;
+
+    color: #84959b;
+
+    font-size: 26px;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.close-login:hover {
+    color: #083b4c;
+
+    transform: rotate(90deg);
+}
+
+
+
+
+.login-form-wrapper {
+    width: 100%;
+    max-width: 440px;
+}
+
+
+/* Heading */
+
+.login-heading {
+    margin-bottom: 34px;
+}
+
+.login-heading h2 {
+    margin: 0;
+
+    color: #083b4c;
+
+    font-size: 34px;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.7px;
+
+    font-weight: 750;
+}
+
+.login-heading p {
+    margin-top: 9px;
+
+    color: #71878e;
+
+    font-size: 14px;
+}
+
+
+
+
+.input-group {
+    width: 100%;
+
+    margin-bottom: 22px;
+}
+
+.input-group label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #083b4c;
+
+    font-size: 13px;
+
+    font-weight: 650;
+}
+
+.input-group input {
+    width: 100%;
+    height: 55px;
+
+    padding: 0 17px;
+
+    outline: none;
+
+    border: 1px solid #dce7e5;
+
+    border-radius: 12px;
+
+    background: #fbfdfd;
+
+    color: #083b4c;
+
+    font-size: 14px;
+
+    transition: all 0.25s ease;
+}
+
+.input-group input::placeholder {
+    color: #a2b0b5;
+}
+
+.input-group input:focus {
+    border-color: #04a085;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 0 0 4px rgba(4, 160, 133, 0.08);
+}
+
+
+
+
+.password-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.forgot-password {
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #04a085;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.forgot-password:hover {
+    color: #067d83;
+}
+
+.password-input {
+    position: relative;
+}
+
+.password-input input {
+    padding-right: 50px;
+}
+
+.show-password {
+    position: absolute;
+
+    right: 10px;
+    top: 50%;
+
+    width: 35px;
+    height: 35px;
+
+    transform: translateY(-50%);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    background: transparent;
+
+    color: #71878e;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+
+
+
+.login-btn {
+    width: 100%;
+    height: 55px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #04a085;
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 20px rgba(4, 160, 133, 0.16);
+
+    transition: all 0.25s ease;
+}
+
+.login-btn:hover {
+    background: #067d83;
+    color: #ffffff;
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 12px 25px rgba(4, 160, 133, 0.22);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+
+
+
+.login-divider {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    margin: 29px 0;
+}
+
+.login-divider span {
+    flex: 1;
+
+    height: 1px;
+
+    background: #e5eceb;
+}
+
+.login-divider p {
+    margin: 0;
+
+    color: #98a7ab;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+}
+
+
+
+
+.social-login {
+    display: flex;
+    justify-content: center;
+
+    gap: 12px;
+}
+
+.social-login button {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #dfe9e7;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    cursor: pointer;
+
+    transition: all 0.25s ease;
+}
+
+.social-login button:hover {
+    border-color: #04a085;
+
+    background: #f3fbf9;
+
+    transform: translateY(-2px);
+}
+
+.google-icon,
+.github-icon {
+    color: #083b4c;
+
+    font-size: 19px;
+
+    font-weight: 700;
+}
+
+
+
+
+.register-text {
+    margin-top: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    color: #71878e;
+
+    font-size: 12px;
+}
+
+.register-text button {
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #04a085;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.register-text button:hover {
+    color: #067d83;
+}
+
+/* ================= SERVER ERROR ================= */
+
+.login-server-error {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 12px 14px;
+    margin: 18px 0;
+
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 10px;
+
+    color: #b91c1c;
+    font-size: 13px;
+    line-height: 1.4;
+
+    box-sizing: border-box;
+}
+
+.login-server-error span {
+    flex: 1;
+}
+
+.login-server-error button {
+    border: none;
+    background: transparent;
+
+    color: #068482;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+    padding: 4px 6px;
+
+    white-space: nowrap;
+}
+
+.login-server-error button:hover {
+    color: #066664;
+    text-decoration: underline;
+}
+
+
+/* ================= FIELD ERROR ================= */
+
+.field-error {
+    display: block;
+    margin-top: 6px;
+    padding-left: 2px;
+
+    color: #dc2626;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* Input with error */
+
+.input-group input.input-error {
+    border-color: #ef4444;
+    background: #fffafa;
+}
+
+.input-group input.input-error:focus {
+    border-color: #ef4444;
+
+    box-shadow:
+        0 0 0 4px rgba(239, 68, 68, 0.08);
+}
+
+
+
+@media (max-width: 1000px) {
+
+    .meet-login-page {
+        padding: 20px;
+    }
+
+    .meet-login-container {
+        grid-template-columns: 1fr 1fr;
+
+        min-height: 650px;
+    }
+
+    .meet-left-content {
+        padding: 35px;
+    }
+
+    .meet-logo-box img {
+        width: 195px;
+    }
+
+    .meeting-illustration {
+        height: 215px;
+    }
+
+    .video-circle {
+        width: 140px;
+        height: 140px;
+    }
+
+    .meet-intro h1 {
+        font-size: 37px;
+    }
+
+    .meet-login-right {
+        padding: 40px;
+    }
+
+    .login-heading h2 {
+        font-size: 30px;
+    }
+}
+
+
+
+
+@media (max-width: 700px) {
+
+    .meet-login-page {
+        padding: 0;
+
+        align-items: stretch;
+    }
+
+    .meet-login-container {
+        width: 100%;
+
+        min-height: 100vh;
+
+        display: block;
+
+        border-radius: 0;
+
+        border: none;
+
+        box-shadow: none;
+    }
+
+
+    /* LEFT */
+
+    .meet-login-left {
+        min-height: auto;
+
+        height: auto;
+    }
+
+    .meet-left-content {
+        padding: 25px 22px 22px;
+    }
+
+    .meet-logo-box img {
+        width: 175px;
+    }
+
+    /* Hide illustration on mobile */
+
+    .meeting-illustration {
+        display: none;
+    }
+
+    .meet-intro {
+        margin-top: 22px;
+
+        padding-top: 0;
+    }
+
+    .meet-intro h1 {
+        font-size: 31px;
+
+        letter-spacing: -1px;
+    }
+
+    .meet-intro p {
+        margin-top: 10px;
+        margin-bottom: 0;
+
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+    /* Hide features on small screen */
+
+    .meet-features {
+        display: none;
+    }
+
+
+    /* RIGHT */
+
+    .meet-login-right {
+        min-height: calc(100vh - 185px);
+
+        padding: 35px 22px;
+
+        align-items: flex-start;
+    }
+
+    .close-login {
+        top: 14px;
+        right: 15px;
+
+        width: 30px;
+        height: 30px;
+    }
+
+    .login-form-wrapper {
+        max-width: 100%;
+    }
+
+    .login-heading {
+        margin-bottom: 27px;
+    }
+
+    .login-heading h2 {
+        font-size: 28px;
+    }
+
+    .login-heading p {
+        font-size: 13px;
+    }
+
+    .input-group {
+        margin-bottom: 19px;
+    }
+
+    .input-group input,
+    .login-btn {
+        height: 53px;
+    }
+}
+
+
+
+
+@media (max-width: 400px) {
+
+    .meet-left-content {
+        padding: 22px 18px 18px;
+    }
+
+    .meet-logo-box img {
+        width: 155px;
+    }
+
+    .meet-intro h1 {
+        font-size: 27px;
+    }
+
+    .meet-login-right {
+        padding: 30px 18px;
+    }
+
+    .login-heading h2 {
+        font-size: 25px;
+    }
+
+    .input-group input,
+    .login-btn {
+        height: 50px;
+    }
+}
