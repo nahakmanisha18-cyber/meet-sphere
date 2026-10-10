@@ -54,12 +54,8 @@ const Meeting = () => {
     const remoteNamesRef = useRef({});
     const [remoteCameraStates, setRemoteCameraStates] = useState({});
     const [cameraOn, setCameraOn] = useState(() => {
-        const savedCameraState =
-            localStorage.getItem("meetSphere_cameraOn");
-
-        return savedCameraState === null
-            ? true
-            : savedCameraState === "true";
+        const savedCameraState =  localStorage.getItem("meetSphere_cameraOn");
+        return savedCameraState === null? true: savedCameraState === "true";
     });
 
     const cameraStateRef = useRef(cameraOn);
@@ -98,24 +94,7 @@ const Meeting = () => {
     } = useSelector((state) => state.meeting);
 
     const meeting = meetingDetails;
-
     const isHost = meeting?.host?._id?.toString() === user?.id?.toString() || meeting?.hostId?.toString() === user?.id?.toString();
-
-    console.log("HOST DEBUG", {
-        userId: user?.id,
-        userObject: user,
-        meetingHost: meeting?.host,
-        meetingHostId: meeting?.host?._id,
-        meetingHostIdDirect: meeting?.hostId,
-        isHost,
-    });
-
-    console.log("👑 HOST CHECK", {
-        userId: user?.id,
-        meetingHost: meeting?.host?._id,
-        meetingHostId: meeting?.hostId,
-        isHost,
-    });
     const meetingId = meeting?.meetingId || roomId;
 
     const {
