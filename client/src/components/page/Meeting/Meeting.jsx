@@ -138,11 +138,9 @@ const Meeting = () => {
     }, [roomId, isHost, isAdmitted, dispatch]);
 
     useEffect(() => {
-
         if (!roomId) {
             return;
         }
-
         dispatch(getMeeting(roomId));
 
     }, [roomId, dispatch]);
