@@ -20,6 +20,7 @@ const broadcastMeetingParticipants = async (io, meetingId) => {
                 fullName: s.fullName || "User",
                 cameraOn: s.cameraOn ?? true,
                 isHost: s.isHost === true,
+                isHandRaised: s.isHandRaised === true,
             }));
 
         io.to(meetingId).emit(
@@ -521,9 +522,7 @@ const setupSocket = (io) => {
             }
         );
 
-        socket.on(
-            "camera_state_changed",
-            (data) => {
+        socket.on( "camera_state_changed", (data) => {
 
                 const { meetingId, userId, cameraOn, } = data;
                 if (!meetingId) return;
@@ -541,9 +540,7 @@ const setupSocket = (io) => {
             }
         );
 
-        socket.on(
-            "offer",
-            ({ to, offer }) => {
+        socket.on( "offer", ({ to, offer }) => {
 
                 if (!to || !offer) {
                     return;
@@ -555,9 +552,7 @@ const setupSocket = (io) => {
             }
         );
 
-        socket.on(
-            "answer",
-            ({ to, answer }) => {
+        socket.on("answer", ({ to, answer }) => {
 
                 if (!to || !answer) {
                     return;
@@ -568,9 +563,7 @@ const setupSocket = (io) => {
                 );
             }
         );
-        socket.on(
-            "ice-candidate",
-            ({ to, candidate }) => {
+        socket.on("ice-candidate",({ to, candidate }) => {
 
                 if (!to || !candidate) {
                     return;
@@ -583,21 +576,38 @@ const setupSocket = (io) => {
             }
         );
 
-        socket.on(
-            "leave_meeting",
-            () => {
+        socket.on("leave_meeting", () => {
                 handleParticipantLeave(socket, io);
             }
         );
 
-        socket.on(
-            "disconnect",
-            () => {
-
+        socket.on( "disconnect",() => {
                 console.log("User disconnected:", socket.id);
                 handleParticipantLeave(socket, io);
             }
         );
+
+        socket.on("hand_raise", async ({ isHandRaised }) => {
+            try {
+                if (!socket.meetingId || !socket.isAdmitted) {
+                    return;
+                }
+
+                socket.isHandRaised = Boolean(isHandRaised);
+
+                io.to(socket.meetingId).emit("hand_raise_updated", {
+                    socketId: socket.id,
+                    userId: socket.userId,
+                    fullName: socket.fullName || "User",
+                    isHandRaised: socket.isHandRaised,
+                });
+
+                await broadcastMeetingParticipants(io, socket.meetingId);
+            } catch (error) {
+                console.error("HAND RAISE ERROR:", error);
+            }
+        });
+
     });
 };
 

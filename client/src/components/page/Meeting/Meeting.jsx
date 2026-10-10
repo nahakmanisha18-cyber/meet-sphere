@@ -17,8 +17,6 @@ const Meeting = () => {
     const { roomId } = useParams();
 
     const user = JSON.parse(localStorage.getItem("user")) || {};
-    const [handRaised, setHandRaised] = useState(false);
-
     const [activePanel, setActivePanel] = useState(null);
     const [participantChecked, setParticipantChecked] = useState(false);
     const [remoteStreams, setRemoteStreams] = useState([]);
@@ -26,7 +24,7 @@ const Meeting = () => {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [localStream, setLocalStream] = useState(null);
     const localVideoRef = useRef(null);
-
+    const [isHandRaised, setIsHandRaised] = useState(false);
     const [showParticipants, setShowParticipants] = useState(false);
     const audioContextRef = useRef(null);
     const analyserRef = useRef(null);
@@ -54,8 +52,8 @@ const Meeting = () => {
     const remoteNamesRef = useRef({});
     const [remoteCameraStates, setRemoteCameraStates] = useState({});
     const [cameraOn, setCameraOn] = useState(() => {
-        const savedCameraState =  localStorage.getItem("meetSphere_cameraOn");
-        return savedCameraState === null? true: savedCameraState === "true";
+        const savedCameraState = localStorage.getItem("meetSphere_cameraOn");
+        return savedCameraState === null ? true : savedCameraState === "true";
     });
 
     const cameraStateRef = useRef(cameraOn);
@@ -286,6 +284,15 @@ const Meeting = () => {
             return prev === panel ? null : panel;
         });
     };
+
+    const toggleHandRaise = () => {
+        const nextState = !isHandRaised;
+        setIsHandRaised(nextState);
+        socket.emit("hand_raise", {
+            isHandRaised: nextState,
+        });
+    };
+
 
     useEffect(() => {
 
@@ -612,7 +619,7 @@ const Meeting = () => {
 
                     return [
                         ...prev,
-                        {socketId,userId,fullName: fullName || "Participant",cameraOn: cameraOn ?? true,},
+                        { socketId, userId, fullName: fullName || "Participant", cameraOn: cameraOn ?? true, },
                     ];
                 });
                 remoteNamesRef.current[socketId] = fullName || "Participant";
@@ -842,6 +849,38 @@ const Meeting = () => {
         };
     }, []);
 
+
+    useEffect(() => {
+        const handleHandRaiseUpdated = (data) => {
+            setLiveParticipants((prev) => {
+                const exists = prev.some(
+                    (person) => person.socketId === data.socketId
+                );
+                if (!exists) {
+                    return [
+                        ...prev,
+                        {
+                            socketId: data.socketId,
+                            userId: data.userId,
+                            fullName: data.fullName || "Participant",
+                            isHandRaised: data.isHandRaised,
+                        },
+                    ];
+                }
+
+                return prev.map((person) =>
+                    person.socketId === data.socketId ? { ...person, isHandRaised: data.isHandRaised } : person
+                );
+            });
+        };
+
+        socket.on("hand_raise_updated", handleHandRaiseUpdated);
+        return () => {
+            socket.off("hand_raise_updated", handleHandRaiseUpdated);
+        };
+    }, []);
+
+
     const handleChatKeyDown = (e) => {
         if (
             e.key === "Enter" &&
@@ -854,11 +893,8 @@ const Meeting = () => {
 
 
     useEffect(() => {
-        if (
-            chatMessagesRef.current
-        ) {
-            chatMessagesRef.current.scrollTop =
-                chatMessagesRef.current.scrollHeight;
+        if ( chatMessagesRef.current) {
+            chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
         }
     }, [messages]);
 
@@ -997,7 +1033,11 @@ const Meeting = () => {
                 <div className="meeting-brand">
 
                     <span className="meeting-time">
-                        08:34
+                        {new Date().toLocaleTimeString("en-IN", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                        })}
                     </span>
 
                     <span className="meeting-code">
@@ -1011,6 +1051,15 @@ const Meeting = () => {
                 </div>
 
                 <div className="meeting-header-actions">
+
+
+                    {isHandRaised && (
+                        <div className="header-hand-raised">
+                            <FaHandPaper />
+                            <span>{user.fullName || "You"}</span>
+                        </div>
+                    )}
+
                     <button
                         className={`header-icon-btn ${activePanel === "participants" ? "active-header-btn" : ""
                             }`}
@@ -1076,7 +1125,11 @@ const Meeting = () => {
                                 <span></span>
                             </div>
                         )}
-
+                        {isHandRaised && (
+                            <div className="video-hand-raised" title="Hand raised">
+                                <FaHandPaper />
+                            </div>
+                        )}
                         <div className="video-name">
                             {micOn ? (
                                 <FaMicrophone />
@@ -1126,6 +1179,16 @@ const Meeting = () => {
                                         </div>
                                     </div>
                                 )}
+
+                                {liveParticipants.some(
+                                    (person) =>
+                                        person.socketId === remote.socketId &&
+                                        person.isHandRaised
+                                ) && (
+                                        <div className="video-hand-raised" title="Hand raised">
+                                            <FaHandPaper />
+                                        </div>
+                                    )}
 
                                 <div className="video-name">
                                     <FaMicrophone />
@@ -1562,14 +1625,9 @@ const Meeting = () => {
                     </button>
 
                     <button
-                        className={`control-btn ${handRaised
-                            ? "hand-active"
-                            : ""
-                            }`}
-                        onClick={() =>
-                            setHandRaised(!handRaised)
-                        }
-                        title="Raise hand"
+                        className={`control-btn ${isHandRaised ? "hand-active" : ""}`}
+                        onClick={toggleHandRaise}
+                        title={isHandRaised ? "Lower hand" : "Raise hand"}
                     >
                         <FaHandPaper />
                     </button>
