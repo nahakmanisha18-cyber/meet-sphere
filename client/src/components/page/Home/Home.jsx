@@ -6,10 +6,10 @@ import { FaVideo, FaLink, FaCalendarAlt, FaClock, FaArrowRight, FaUserCircle, Fa
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createMeeting } from "../../../redux/action/meetingAction";
-import "./Dashboard.css";
+import "./Home.css";
 import Header from "../../Header/Header";
 
-const Dashboard = () => {
+const Home = () => {
 
     const [user, setUser] = useState(null);
     const [dashboardLoading, setDashboardLoading] = useState(true);
@@ -345,4 +345,4 @@ const Dashboard = () => {
 };
 
 
-export default Dashboard;
+export default Home;

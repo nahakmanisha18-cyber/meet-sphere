@@ -1215,16 +1215,7 @@ const Meeting = () => {
                 )}
 
                 {activePanel === "participants" && (
-                    <PeoplePanel
-                        setActivePanel={setActivePanel}
-                        isHost={isHost}
-                        waitingUsers={waitingUsers}
-                        handleAdmitRequest={handleAdmitRequest}
-                        showParticipants={showParticipants}
-                        setShowParticipants={setShowParticipants}
-                        liveParticipants={liveParticipants}
-                        user={user}
-                    />
+                    <PeoplePanel setActivePanel={setActivePanel} isHost={isHost} waitingUsers={waitingUsers} handleAdmitRequest={handleAdmitRequest} showParticipants={showParticipants} setShowParticipants={setShowParticipants} liveParticipants={liveParticipants} user={user}/>
                 )}
 
                 {activePanel === "more" && (

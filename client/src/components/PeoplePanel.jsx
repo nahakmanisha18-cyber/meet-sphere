@@ -1,25 +1,7 @@
 
 
-import {
-    FaTimes,
-    FaUserPlus,
-    FaSearch,
-    FaMicrophone,
-    FaMicrophoneSlash,
-    FaVideo,
-    FaVideoSlash,
-    FaEllipsisV,
-} from "react-icons/fa";
-const PeoplePanel = ({
-    setActivePanel,
-    isHost,
-    waitingUsers,
-    handleAdmitRequest,
-    showParticipants,
-    setShowParticipants,
-    liveParticipants,
-    user,
-}) => {
+import {FaTimes,FaUserPlus,FaSearch,FaMicrophone,FaMicrophoneSlash,FaVideo,FaVideoSlash,FaEllipsisV} from "react-icons/fa";
+const PeoplePanel = ({setActivePanel,isHost,waitingUsers,handleAdmitRequest,showParticipants,setShowParticipants,liveParticipants,user}) => {
 
     return (
         <aside className="people-panel">
