@@ -1,7 +1,7 @@
-const Meeting = require("../models/meetingModel");
+
 const Participant = require("../models/participantModel");
 const MeetingMessage = require("../models/meetingMessageModel");
-
+const Meeting = require("../models/meetingModel");
 
 const broadcastMeetingParticipants = async (io, meetingId) => {
     try {
@@ -212,13 +212,6 @@ const setupSocket = (io) => {
                 socket.isHost = false;
                 socket.isAdmitted = true;
                 socket.pendingMeetingId = null;
-                // console.log("🔄 PARTICIPANT REJOINED:", {
-                //     socketId: socket.id,
-                //     userId,
-                //     fullName,
-                //     meetingId,
-                // });
-
                 const existingSockets = await io.in(meetingId).fetchSockets();
                 existingSockets.forEach((existingSocket) => {
                     if (existingSocket.id === socket.id) {
@@ -607,6 +600,20 @@ const setupSocket = (io) => {
                 console.error("HAND RAISE ERROR:", error);
             }
         });
+        
+        socket.on("screen_share_started", (data) => {
+            socket.to(data.meetingId).emit("screen_share_started", {
+                ...data,
+                socketId: socket.id,
+            });
+        });
+
+        socket.on("screen_share_stopped", (data) => {
+            socket.to(data.meetingId).emit("screen_share_stopped", {
+                ...data,
+                socketId: socket.id,
+            });
+        });
 
     });
 };
@@ -619,7 +626,6 @@ const handleParticipantLeave = async (socket, io) => {
         socket.pendingMeetingId = null;
         return;
     }
-
     try {
         const meeting = await Meeting.findOne({ meetingId });
 
@@ -644,13 +650,9 @@ const handleParticipantLeave = async (socket, io) => {
         userId,
         fullName: fullName || "User",
     });
-
     console.log(`${fullName || "User"} left meeting ${meetingId}`);
-
     socket.leave(meetingId);
-
     await broadcastMeetingParticipants(io, meetingId);
-
     socket.meetingId = null;
     socket.isAdmitted = false;
     socket.pendingMeetingId = null;
